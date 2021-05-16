@@ -1,27 +1,17 @@
-from Lexer import Lexer
-from Parser import Parser
-from Evaluator import Evaluator
+from arrows import *
+from constants import *
+from errors import *
+from lexer import *
+from parser import *
 
 
-def main():
-    filename = 'hello.zero'
-    file = open(filename, 'r')
-    lexer = Lexer(file)
-    parser = Parser(lexer.tokens)
+def run(fn, text):
+    lexer = Lexer(fn, text)
+    tokens, error = lexer.make_tokens()
+    if error:
+        return None, error
 
-    lexer.tokenizer()
-    print("TOKENS:")
-    print(lexer.tokens, "\n")
+    parser = Parser(tokens)
+    ast = parser.parse()
 
-    parser.build_AST()
-    print("AST:")
-    print(parser.AST, "\n")
-
-    evaluator = Evaluator(parser.AST)
-
-    print("OUTPUT:")
-    evaluator.run(parser.AST)
-
-
-if __name__ == "__main__":
-    main()
+    return ast.node, ast.error
