@@ -1,7 +1,7 @@
 from constants import *
 from errors import *
-from position import *
-from tokens import *
+from position import Position
+from tokens import Token
 
 
 class Lexer:
