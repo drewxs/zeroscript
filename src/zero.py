@@ -2,8 +2,10 @@ from arrows import *
 from constants import *
 from errors import *
 from nodes import *
-from lexer import Lexer
-from _parser import Parser
+from lexer import *
+from _parser import *
+from interpreter import *
+from context import *
 
 
 def run(fn, text):
@@ -14,5 +16,11 @@ def run(fn, text):
 
     parser = Parser(tokens)
     ast = parser.parse()
+    if ast.error:
+        return None, ast.error
 
-    return ast.node, ast.error
+    interpreter = Interpreter()
+    context = Context('<program>')
+    result = interpreter.visit(ast.node, context)
+
+    return result.value, result.error
