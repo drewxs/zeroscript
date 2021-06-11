@@ -6,6 +6,10 @@ from lexer import *
 from _parser import *
 from interpreter import *
 from context import *
+from symboltable import SymbolTable
+
+global_symbol_table = SymbolTable()
+global_symbol_table.set("null", Number(0))
 
 
 def run(fn, text):
@@ -21,6 +25,7 @@ def run(fn, text):
 
     interpreter = Interpreter()
     context = Context('<program>')
+    context.symbol_table = global_symbol_table
     result = interpreter.visit(ast.node, context)
 
     return result.value, result.error
