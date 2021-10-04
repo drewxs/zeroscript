@@ -1,8 +1,10 @@
-# ZeroScript
+# ZeroScript v0.0.1
 
-An interpreted programming language written in python.<br />
+An interpreted programming language written in python.
+<br />
+<br />
 
-# Usage
+### Usage
 
 Write code using .zero file extension. <br />
 Update filename with in zero.py with your code. <br />
@@ -12,7 +14,8 @@ Run the following command:
 $ python zero.py
 ```
 
-# Functionality
+### Functionality
 
-Echo, goto, stop <br />
+Echo, goto, stop
+<br />
 More functionality will be added along the way.
