@@ -18,10 +18,13 @@ class Parser:
     def parse(self):
         res = self.expr()
         if not res.error and self.current_tok.type != TT_EOF:
-            return res.failure(InvalidSyntaxError(
-                self.current_tok.pos_start, self.current_tok.pos_end,
-                "Expected arithmetic operation"
-            ))
+            return res.failure(
+                InvalidSyntaxError(
+                    self.current_tok.pos_start,
+                    self.current_tok.pos_end,
+                    "Expected arithmetic operation",
+                )
+            )
         return res
 
     def atom(self):
@@ -49,18 +52,22 @@ class Parser:
                 self.advance()
                 return res.success(expr)
             else:
-                return res.failure(InvalidSyntaxError(
-                    self.current_tok.pos_start, self.current_tok.pos_end,
-                    "Expected ')'"
-                ))
+                return res.failure(
+                    InvalidSyntaxError(
+                        self.current_tok.pos_start,
+                        self.current_tok.pos_end,
+                        "Expected ')'",
+                    )
+                )
 
-        return res.failure(InvalidSyntaxError(
-            tok.pos_start, tok.pos_end,
-            "Expected type, identifier, or operation"
-        ))
+        return res.failure(
+            InvalidSyntaxError(
+                tok.pos_start, tok.pos_end, "Expected number, identifier, or operation"
+            )
+        )
 
     def power(self):
-        return self.bin_op(self.atom, (TT_POW, ), self.factor)
+        return self.bin_op(self.atom, (TT_POW,), self.factor)
 
     def factor(self):
         res = ParseResult()
@@ -82,25 +89,33 @@ class Parser:
     def expr(self):
         res = ParseResult()
 
-        if self.current_tok.matches(TT_KEYWORD, 'var') or self.current_tok.matches(TT_KEYWORD, 'let'):
+        if self.current_tok.matches(TT_KEYWORD, "var") or self.current_tok.matches(
+            TT_KEYWORD, "let"
+        ):
             res.register_advance()
             self.advance()
 
             if self.current_tok.type != TT_IDENTIFIER:
-                return res.failure(InvalidSyntaxError(
-                    self.current_tok.pos_start, self.current_tok.pos_end,
-                    "Expected identifier"
-                ))
+                return res.failure(
+                    InvalidSyntaxError(
+                        self.current_tok.pos_start,
+                        self.current_tok.pos_end,
+                        "Expected identifier",
+                    )
+                )
 
             var_name = self.current_tok
             res.register_advance()
             self.advance()
 
             if self.current_tok.type != TT_EQ:
-                return res.failure(InvalidSyntaxError(
-                    self.current_tok.pos_start, self.current_tok.pos_end,
-                    "Expected '='"
-                ))
+                return res.failure(
+                    InvalidSyntaxError(
+                        self.current_tok.pos_start,
+                        self.current_tok.pos_end,
+                        "Expected '='",
+                    )
+                )
 
             res.register_advance()
             self.advance()
@@ -112,10 +127,13 @@ class Parser:
         node = res.register(self.bin_op(self.term, (TT_PLUS, TT_MINUS)))
 
         if res.error:
-            return res.failure(InvalidSyntaxError(
-                self.current_tok.pos_start, self.current_tok.pos_end,
-                "Expected type, identifier, var assign or operation"
-            ))
+            return res.failure(
+                InvalidSyntaxError(
+                    self.current_tok.pos_start,
+                    self.current_tok.pos_end,
+                    "Expected type, identifier, var assign or operation",
+                )
+            )
 
         return res.success(node)
 

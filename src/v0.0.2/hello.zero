@@ -1,0 +1,12 @@
+start:
+    echo "hello world"
+    goto gohere
+    echo "back to main method"
+    stop
+    echo "unreachable line"
+
+other_label:
+    echo "In other label"
+
+gohere:
+    echo "im here"

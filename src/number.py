@@ -33,11 +33,13 @@ class Number:
         if isinstance(other, Number):
             if other.value == 0:
                 return None, RTError(
-                    other.pos_start, other.pos_end,
-                    'division by zero',
-                    self.context
+                    other.pos_start, other.pos_end, "division by zero", self.context
                 )
             return Number(self.value / other.value).set_context(self.context), None
+
+    def pow_by(self, other):
+        if isinstance(other, Number):
+            return Number(self.value ** other.value).set_context(self.context), None
 
     def copy(self):
         copy = Number(self.value)

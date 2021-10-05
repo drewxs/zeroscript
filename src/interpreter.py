@@ -8,17 +8,18 @@ from position import *
 
 class Interpreter:
     def visit(self, node, context):
-        method_name = f'visit_{type(node).__name__}'
+        method_name = f"visit_{type(node).__name__}"
         method = getattr(self, method_name, self.no_visit_method)
         return method(node, context)
 
     def no_visit_method(self, node, context):
-        raise Exception(f'no visit_{type(node).__name__} method defined')
+        raise Exception(f"no visit_{type(node).__name__} method defined")
 
     def visit_NumberNode(self, node, context):
         return RTResult().success(
-            Number(node.tok.value).set_context(
-                context).set_pos(node.pos_start, node.pos_end)
+            Number(node.tok.value)
+            .set_context(context)
+            .set_pos(node.pos_start, node.pos_end)
         )
 
     def visit_VarAccessNode(self, node, context):
@@ -27,11 +28,14 @@ class Interpreter:
         value = context.symbol_table.get(var_name)
 
         if not value:
-            return res.failure(RTError(
-                node.pos_start, node.pos_end,
-                f"'{var_name}' is not defined",
-                context
-            ))
+            return res.failure(
+                RTError(
+                    node.pos_start,
+                    node.pos_end,
+                    f"'{var_name}' is not defined",
+                    context,
+                )
+            )
 
         value = value.copy().set_pos(node.pos_start, node.pos_end)
         return res.success(value)
@@ -63,6 +67,8 @@ class Interpreter:
             result, error = left.mul_by(right)
         elif node.op_tok.type == TT_DIV:
             result, error = left.div_by(right)
+        elif node.op_tok.type == TT_POW:
+            result, error = left.pow_by(right)
 
         if error:
             return res.failure(error)
