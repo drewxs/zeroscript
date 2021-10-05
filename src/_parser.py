@@ -86,6 +86,37 @@ class Parser:
     def term(self):
         return self.bin_op(self.factor, (TT_MUL, TT_DIV))
 
+    def arith_expr(self):
+        return self.bin_op(self.term, (TT_PLUS, TT_MINUS))
+
+    def comp_expr(self):
+        res = ParseResult()
+
+        if self.current_tok.matches(TT_KEYWORD, "not"):
+            op_tok = self.current_tok
+            res.register_advance()
+            self.advance()
+
+            node = res.register(self.comp_expr())
+            if res.error:
+                return res
+            return res.succes(UnaryOpNode(op_tok, node))
+
+        node = res.register(
+            self.bin_op(self.arith_expr, (TT_EE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE))
+        )
+
+        if res.error:
+            return res.failure(
+                InvalidSyntaxError(
+                    self.current_tok.pos_start,
+                    self.current_tok.pos_end,
+                    "Expected number, identifier, operation, 'not'",
+                )
+            )
+
+        return res.success(node)
+
     def expr(self):
         res = ParseResult()
 
@@ -108,7 +139,7 @@ class Parser:
             res.register_advance()
             self.advance()
 
-            if self.current_tok.type != TT_EQ:
+            if self.current_tok.type != TT_EE:
                 return res.failure(
                     InvalidSyntaxError(
                         self.current_tok.pos_start,
@@ -124,7 +155,9 @@ class Parser:
                 return res
             return res.success(VarAssignNode(var_name, expr))
 
-        node = res.register(self.bin_op(self.term, (TT_PLUS, TT_MINUS)))
+        node = res.register(
+            self.bin_op(self.comp_expr, ((TT_KEYWORD, "and"), (TT_KEYWORD, "or")))
+        )
 
         if res.error:
             return res.failure(
@@ -146,7 +179,10 @@ class Parser:
         if res.error:
             return res
 
-        while self.current_tok.type in ops:
+        while (
+            self.current_tok.type in ops
+            or (self.current_tok.type, self.current_tok.value) in ops
+        ):
             op_tok = self.current_tok
             res.register_advance()
             self.advance()
