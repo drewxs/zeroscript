@@ -131,7 +131,7 @@ class Parser:
                 InvalidSyntaxError(
                     self.current_tok.pos_start,
                     self.current_tok.pos_end,
-                    "Expected type, identifier, var assign or operation",
+                    "Expected number, identifier, var assign or operation",
                 )
             )
 
