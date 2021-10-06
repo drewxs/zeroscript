@@ -111,7 +111,7 @@ class Lexer:
         return None, ExpectedCharError(pos_start, self.pos, "'=' (after '!'")
 
     def make_equals(self):
-        tok_type = TT_EE
+        tok_type = TT_EQ
         pos_start = self.pos.copy()
         self.advance()
 

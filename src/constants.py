@@ -13,6 +13,7 @@ TT_MINUS = "MINUS"
 TT_MUL = "MUL"
 TT_DIV = "DIV"
 TT_POW = "POW"
+TT_EQ = "EQ"
 TT_LPAREN = "LPAREN"
 TT_RPAREN = "RPAREN"
 TT_EE = "EE"
@@ -23,4 +24,18 @@ TT_LTE = "LTE"
 TT_GTE = "GTE"
 TT_EOF = "EOF"
 
-KEYWORDS = ["var", "let", "and", "or", "not", "if", "then", "else", "elif"]
+KEYWORDS = [
+    "var",
+    "let",
+    "and",
+    "or",
+    "not",
+    "if",
+    "elif",
+    "else",
+    "then",
+    "for",
+    "to",
+    "step",
+    "while",
+]
