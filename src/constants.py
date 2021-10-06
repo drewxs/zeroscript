@@ -23,4 +23,4 @@ TT_LTE = "LTE"
 TT_GTE = "GTE"
 TT_EOF = "EOF"
 
-KEYWORDS = ["var", "let", "and", "or", "not"]
+KEYWORDS = ["var", "let", "and", "or", "not", "if", "then", "else", "elif"]
