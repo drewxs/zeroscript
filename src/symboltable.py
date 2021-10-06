@@ -1,5 +1,5 @@
 class SymbolTable:
-    def __init__(self):
+    def __init__(self, parent=None):
         self.symbols = {}
         self.parent = None
 
