@@ -12,7 +12,8 @@ class Error:
     def as_string(self):
         result = f"{self.error_name}: {self.details}\n"
         result += f"File {self.pos_start.fn}, line {self.pos_start.ln + 1}"
-        result += "\n\n" + arrows(self.pos_start.ftxt, self.pos_start, self.pos_end)
+        result += "\n\n" + arrows(self.pos_start.ftxt,
+                                  self.pos_start, self.pos_end)
         return result
 
 
@@ -39,7 +40,8 @@ class RTError(Error):
     def as_string(self):
         result = self.generate_traceback()
         result += f"{self.error_name}: {self.details}\n"
-        result += "\n\n" + arrows(self.pos_start.ftxt, self.pos_start, self.pos_end)
+        result += "\n\n" + arrows(self.pos_start.ftxt,
+                                  self.pos_start, self.pos_end)
         return result
 
     def generate_traceback(self):
@@ -64,8 +66,7 @@ class RTResult:
         self.error = None
 
     def register(self, res):
-        if res.error:
-            self.error = res.error
+        self.error = res.error
         return res.value
 
     def success(self, value):

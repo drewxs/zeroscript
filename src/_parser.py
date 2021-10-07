@@ -66,7 +66,8 @@ class Parser:
             return res.success(VarAssignNode(var_name, expr))
 
         node = res.register(
-            self.bin_op(self.comp_expr, ((TT_KEYWORD, "and"), (TT_KEYWORD, "or")))
+            self.bin_op(self.comp_expr,
+                        ((TT_KEYWORD, "and"), (TT_KEYWORD, "or")))
         )
 
         if res.error:
@@ -91,10 +92,11 @@ class Parser:
             node = res.register(self.comp_expr())
             if res.error:
                 return res
-            return res.succes(UnaryOpNode(op_tok, node))
+            return res.success(UnaryOpNode(op_tok, node))
 
         node = res.register(
-            self.bin_op(self.arith_expr, (TT_EE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE))
+            self.bin_op(self.arith_expr, (TT_EE, TT_NE,
+                        TT_LT, TT_GT, TT_LTE, TT_GTE))
         )
 
         if res.error:
@@ -170,7 +172,7 @@ class Parser:
                         InvalidSyntaxError(
                             self.current_tok.pos_start,
                             self.current_tok.pos_end,
-                            "Expected ',' or ')'",
+                            f"Expected ',' or ')'",
                         )
                     )
 
@@ -573,12 +575,15 @@ class ParseResult:
     def __init__(self):
         self.error = None
         self.node = None
+        self.last_registered_advance_count = 0
         self.advance_count = 0
 
     def register_advance(self):
+        self.last_registered_advance_count = 1
         self.advance_count += 1
 
     def register(self, res):
+        self.last_registered_advance_count = res.advance_count
         self.advance_count += res.advance_count
         if res.error:
             self.error = res.error
@@ -589,6 +594,6 @@ class ParseResult:
         return self
 
     def failure(self, error):
-        if not self.error or self.advance_count == 0:
+        if not self.error or self.last_registered_advance_count == 0:
             self.error = error
         return self
